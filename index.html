@@ -129,185 +129,226 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwAWStFkvXPcMsrj_0K8W5W3QlqXl9yX5TrK1ePh-ttziMTuylIg8ZTgjE_N8uVF6AK1w/exec";
+    // ⚠️ PENTING: TEMPELKAN URL WEB APP GOOGLE APPS SCRIPT (/exec) ANDA DI SINI!
+    const API_URL = "https://script.google.com/macros/s/AKfycbwAWStFkvXPcMsrj_0K8W5W3QlqXl9yX5TrK1ePh-ttziMTuylIg8ZTgjE_N8uVF6AK1w/exec";
 
-        let dataGlobalFinansial = null;
-        let tabAktifSaatIni = "DIVA";
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const hariIni = new Date().toISOString().split('T')[0];
-            document.getElementById("input-tanggal").value = hariIni;
-            ambilDataSistemDashboard();
-        });
+    // Variabel global penyimpan data agar switch tab instan tanpa loading ulang
+    let dataGlobalFinansial = null;
+    let tabAktifSaatIni = "DIVA";
 
-        function ambilDataSistemDashboard() {
-            const statusWaktu = document.getElementById("waktu-update");
-            const panelError = document.getElementById("error-dashboard");
-            statusWaktu.innerText = "Memperbarui data dari Google Sheets...";
-            panelError.classList.add("hidden");
+    // Atur tanggal default input form ke tanggal hari ini saat halaman dimuat
+    document.addEventListener("DOMContentLoaded", () => {
+        const hariIni = new Date().toISOString().split('T')[0];
+        document.getElementById("input-tanggal").value = hariIni;
+        ambilDataSistemDashboard();
+    });
 
-            fetch(API_URL, {
-                method: "POST",
-                mode: "cors",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ action: "getDataDashboard" })
-            })
-            .then(res => res.json())
-            .then(res => {
-                if (res.error) {
-                    panelError.innerText = res.error;
-                    panelError.classList.remove("hidden");
-                    statusWaktu.innerText = "Gagal memperbarui.";
-                } else {
-                    dataGlobalFinansial = res;
-                    statusWaktu.innerText = "Terakhir diperbarui: " + res.waktuUpdate;
-                    renderTabelDashboard(tabAktifSaatIni);
-                }
-            })
-            .catch(err => {
-                panelError.innerText = "Gagal terhubung ke server backend: " + err.toString();
+    /**
+     * Mengambil data terupdate dari Google Sheet lewat API
+     */
+    function ambilDataSistemDashboard() {
+        const statusWaktu = document.getElementById("waktu-update");
+        const panelError = document.getElementById("error-dashboard");
+        statusWaktu.innerText = "Memperbarui data dari Google Sheets...";
+        panelError.classList.add("hidden");
+
+        fetch(API_URL, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "getDataDashboard" })
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.error) {
+                panelError.innerText = res.error;
                 panelError.classList.remove("hidden");
-                statusWaktu.innerText = "Koneksi terputus.";
-            });
-        }
-
-        function renderTabelDashboard(nama) {
-            if (!dataGlobalFinansial) return;
-            
-            document.getElementById("label-tabel-nama").innerText = nama;
-            const barisData = nama === "DIVA" ? dataGlobalFinansial.diva : dataGlobalFinansial.widi;
-            const containerTabel = document.getElementById("body-tabel-dashboard");
-            
-            let htmlElemen = "";
-            
-            for (let r = 1; r <= 4; r++) {
-                if (!barisData[r]) continue;
-                htmlElemen += `<tr class="border-b border-slate-50">
-                    <td class="py-2.5 text-slate-400">${barisData[r][0]}</td>
-                    <td class="text-right py-2.5">${barisData[r][1] || 'Rp0'}</td>
-                    <td class="text-right py-2.5">${barisData[r][2] || 'Rp0'}</td>
-                    <td class="text-right py-2.5">${barisData[r][3] || 'Rp0'}</td>
-                </tr>`;
-            }
-            
-            if (barisData[5]) {
-                htmlElemen += `<tr class="bg-emerald-50/60 font-bold text-emerald-700">
-                    <td class="p-2.5 rounded-l-xl">${barisData[5][0]}</td>
-                    <td class="text-right p-2.5">${barisData[5][1] || 'Rp0'}</td>
-                    <td class="text-right p-2.5">${barisData[5][2] || 'Rp0'}</td>
-                    <td class="text-right p-2.5 rounded-r-xl">${barisData[5][3] || 'Rp0'}</td>
-                </tr>`;
-            }
-            
-            containerTabel.innerHTML = htmlElemen;
-        }
-
-        function switchTab(nama) {
-            tabAktifSaatIni = nama;
-            document.getElementById("badge-nama").innerText = nama;
-            
-            const btnDiva = document.getElementById("btn-tab-diva");
-            const btnWidi = document.getElementById("btn-tab-widi");
-            
-            if (nama === "DIVA") {
-                btnDiva.className = "py-2.5 rounded-xl font-bold text-sm transition-all duration-200 bg-white text-emerald-600 shadow-xs flex items-center justify-center gap-2 cursor-pointer";
-                btnWidi.className = "py-2.5 rounded-xl font-bold text-sm transition-all duration-200 text-slate-500 hover:bg-white/50 flex items-center justify-center gap-2 cursor-pointer";
+                statusWaktu.innerText = "Gagal memperbarui.";
             } else {
-                btnWidi.className = "py-2.5 rounded-xl font-bold text-sm transition-all duration-200 bg-white text-emerald-600 shadow-xs flex items-center justify-center gap-2 cursor-pointer";
-                btnDiva.className = "py-2.5 rounded-xl font-bold text-sm transition-all duration-200 text-slate-500 hover:bg-white/50 flex items-center justify-center gap-2 cursor-pointer";
+                dataGlobalFinansial = res;
+                statusWaktu.innerText = "Terakhir diperbarui: " + res.waktuUpdate;
+                renderTabelDashboard(tabAktifSaatIni);
             }
-            
-            renderTabelDashboard(nama);
+        })
+        .catch(err => {
+            panelError.innerText = "Gagal terhubung ke server backend: " + err.toString();
+            panelError.classList.remove("hidden");
+            statusWaktu.innerText = "Koneksi terputus.";
+        });
+    }
+
+    /**
+     * Merender ulang tabel html berdasarkan tab nama yang dipilih
+     */
+    function renderTabelDashboard(nama) {
+        if (!dataGlobalFinansial) return;
+        
+        document.getElementById("label-tabel-nama").innerText = nama;
+        const barisData = nama === "DIVA" ? dataGlobalFinansial.diva : dataGlobalFinansial.widi;
+        const containerTabel = document.getElementById("body-tabel-dashboard");
+        
+        let htmlElemen = "";
+        
+        // Loop data baris 1 sampai 4 (Pemasukan, Belanja, Cicilan, Tabungan)
+        for (let r = 1; r <= 4; r++) {
+            if (!barisData[r]) continue;
+            htmlElemen += `<tr class="border-b border-slate-50">
+                <td class="py-2.5 text-slate-400">${barisData[r][0]}</td>
+                <td class="text-right py-2.5">${barisData[r][1] || 'Rp0'}</td>
+                <td class="text-right py-2.5">${barisData[r][2] || 'Rp0'}</td>
+                <td class="text-right py-2.5">${barisData[r][3] || 'Rp0'}</td>
+            </tr>`;
         }
+        
+        // Tambahkan baris ke-5 sebagai Sisa Saldo dengan highlight khusus
+        if (barisData[5]) {
+            htmlElemen += `<tr class="bg-emerald-50/60 font-bold text-emerald-700">
+                <td class="p-2.5 rounded-l-xl">${barisData[5][0]}</td>
+                <td class="text-right p-2.5">${barisData[5][1] || 'Rp0'}</td>
+                <td class="text-right p-2.5">${barisData[5][2] || 'Rp0'}</td>
+                <td class="text-right p-2.5 rounded-r-xl">${barisData[5][3] || 'Rp0'}</td>
+            </tr>`;
+        }
+        
+        containerTabel.innerHTML = htmlElemen;
+    }
 
-        function handleSimpanTransaksi(event) {
-            event.preventDefault();
-            
-            const btnSubmit = document.getElementById("btn-submit");
-            btnSubmit.innerText = "Menyimpan ke Google Sheet...";
-            btnSubmit.disabled = true;
-            
-            const paketData = {
-                tanggal: document.getElementById("input-tanggal").value,
-                nama: document.getElementById("input-nama").value,
-                tipe: document.getElementById("input-tipe").value,
-                kategori: document.getElementById("input-kategori").value,
-                keterangan: document.getElementById("input-keterangan").value,
-                jumlah: document.getElementById("input-jumlah").value
-            };
+    /**
+     * Mengontrol perpindahan Tab tombol DIVA / WIDI
+     */
+    function switchTab(nama) {
+        tabAktifSaatIni = nama;
+        document.getElementById("badge-nama").innerText = nama;
+        
+        const btnDiva = document.getElementById("btn-tab-diva");
+        const btnWidi = document.getElementById("btn-tab-widi");
+        
+        if (nama === "DIVA") {
+            btnDiva.className = "py-2.5 rounded-xl font-bold text-sm transition-all duration-200 bg-white text-emerald-600 shadow-xs flex items-center justify-center gap-2 cursor-pointer";
+            btnWidi.className = "py-2.5 rounded-xl font-bold text-sm transition-all duration-200 text-slate-500 hover:bg-white/50 flex items-center justify-center gap-2 cursor-pointer";
+        } else {
+            btnWidi.className = "py-2.5 rounded-xl font-bold text-sm transition-all duration-200 bg-white text-emerald-600 shadow-xs flex items-center justify-center gap-2 cursor-pointer";
+            btnDiva.className = "py-2.5 rounded-xl font-bold text-sm transition-all duration-200 text-slate-500 hover:bg-white/50 flex items-center justify-center gap-2 cursor-pointer";
+        }
+        
+        renderTabelDashboard(nama);
+    }
 
+    /**
+     * Mengirimkan Form Inputan Data Transaksi Baru ke Google Sheet
+     */
+    function handleSimpanTransaksi(event) {
+        event.preventDefault();
+        
+        const btnSubmit = document.getElementById("btn-submit");
+        btnSubmit.innerText = "Menyimpan ke Google Sheet...";
+        btnSubmit.disabled = true;
+        
+        const paketData = {
+            tanggal: document.getElementById("input-tanggal").value,
+            nama: document.getElementById("input-nama").value,
+            tipe: document.getElementById("input-tipe").value,
+            kategori: document.getElementById("input-kategori").value,
+            keterangan: document.getElementById("input-keterangan").value,
+            jumlah: document.getElementById("input-jumlah").value
+        };
+
+        fetch(API_URL, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "tambahTransaksi", data: paketData })
+        })
+        .then(res => res.json())
+        .then(res => {
+            alert(res.pesan);
+            if (res.sukses) {
+                // Reset inputan teks form kecuali tanggal & nama seleksi
+                document.getElementById("input-keterangan").value = "";
+                document.getElementById("input-jumlah").value = "";
+                document.getElementById("input-file-ocr").value = "";
+                
+                // Tarik data dashboard paling baru agar angka tabel langsung update otomatis
+                ambilDataSistemDashboard();
+            }
+            btnSubmit.innerText = "Simpan Transaksi";
+            btnSubmit.disabled = false;
+        })
+        .catch(err => {
+            alert("Gagal menyimpan transaksi: " + err.toString());
+            btnSubmit.innerText = "Simpan Transaksi";
+            btnSubmit.disabled = false;
+        });
+    }
+
+    /**
+     * Menangani Upload Gambar & Proses OCR Teks Struk Belanja
+     */
+    function handleOcrScan(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const divStatus = document.getElementById("status-ocr");
+        divStatus.className = "mt-2 text-xs font-semibold text-amber-600 flex items-center gap-1.5";
+        divStatus.innerText = "⏳ Membaca teks struk belanja (OCR)...";
+        divStatus.classList.remove("hidden");
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            const hasilBase64Full = reader.result;
+            const murniBase64 = hasilBase64Full.split(",")[1];
+            
             fetch(API_URL, {
                 method: "POST",
                 mode: "cors",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ action: "tambahTransaksi", data: paketData })
+                body: JSON.stringify({
+                    action: "prosesOcrStruk",
+                    data: { base64Data: murniBase64, mimeType: file.type }
+                })
             })
             .then(res => res.json())
             .then(res => {
-                alert(res.pesan);
                 if (res.sukses) {
-                    document.getElementById("input-keterangan").value = "";
-                    document.getElementById("input-jumlah").value = "";
-                    document.getElementById("input-file-ocr").value = "";
-                    ambilDataSistemDashboard();
+                    divStatus.className = "mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5";
+                    divStatus.innerText = "✅ Berhasil mendeteksi nominal angka!";
+                    
+                    // Masukkan nominal hasil deteksi otomatis ke kotak jumlah uang
+                    if (res.jumlah > 0) {
+                        document.getElementById("input-jumlah").value = res.jumlah;
+                    } else {
+                        divStatus.className = "mt-2 text-xs font-semibold text-amber-600 flex items-center gap-1.5";
+                        divStatus.innerText = "⚠️ Gambar berhasil dibaca, tapi gagal menemukan nominal angka. Mohon input manual.";
+                    }
+                } else {
+                    divStatus.className = "mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5";
+                    divStatus.innerText = "❌ " + res.error;
                 }
-                btnSubmit.innerText = "Simpan Transaksi";
-                btnSubmit.disabled = false;
             })
             .catch(err => {
-                alert("Gagal menyimpan transaksi: " + err.toString());
-                btnSubmit.innerText = "Simpan Transaksi";
-                btnSubmit.disabled = false;
+                divStatus.className = "mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5";
+                divStatus.innerText = "❌ Gagal OCR: " + err.toString();
             });
+        };
+    }
+
+    // const selectTipe = document.getElementById("input-tipe");
+    const selectKategori = document.getElementById("input-kategori");
+
+    // Fungsi untuk mengganti kategori secara otomatis
+    function handleKategoriAutoChange() {
+        const tipe = selectTipe.value;
+        if (tipe === "Pemasukan") {
+            selectKategori.value = "Lainnya"; // Ganti ke Lainnya (pemasukan)
+        } else if (tipe === "Belanja / Pengeluaran") {
+            selectKategori.value = "Lain-lain"; // Ganti ke Lain-lain (belanja)
         }
+    }
 
-        function handleOcrScan(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const divStatus = document.getElementById("status-ocr");
-            divStatus.className = "mt-2 text-xs font-semibold text-amber-600 flex items-center gap-1.5";
-            divStatus.innerText = "⏳ Membaca teks struk belanja (OCR)...";
-            divStatus.classList.remove("hidden");
-
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                const hasilBase64Full = reader.result;
-                const murniBase64 = hasilBase64Full.split(",")[1];
-                
-                fetch(API_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({
-                        action: "prosesOcrStruk",
-                        data: { base64Data: murniBase64, mimeType: file.type }
-                    })
-                })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.sukses) {
-                        divStatus.className = "mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5";
-                        divStatus.innerText = "✅ Berhasil mendeteksi nominal angka!";
-                        
-                        if (res.jumlah > 0) {
-                            document.getElementById("input-jumlah").value = res.jumlah;
-                        } else {
-                            divStatus.className = "mt-2 text-xs font-semibold text-amber-600 flex items-center gap-1.5";
-                            divStatus.innerText = "⚠️ Gambar berhasil dibaca, tapi gagal menemukan nominal angka. Mohon input manual.";
-                        }
-                    } else {
-                        divStatus.className = "mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5";
-                        divStatus.innerText = "❌ " + res.error;
-                    }
-                })
-                .catch(err => {
-                    divStatus.className = "mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5";
-                    divStatus.innerText = "❌ Gagal OCR: " + err.toString();
-                });
-            };
-        }
-    </script>
+    // Daftarkan event listener
+    selectTipe.addEventListener("change", handleKategoriAutoChange);
+</script>
 </body>
 </html>
