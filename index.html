@@ -102,8 +102,8 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-1.5 tracking-wide">Kategori</label>
-                <select id="input-kategori" class="w-full p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-sm font-semibold text-slate-700 focus:outline-hidden focus:border-emerald-500 focus:bg-white transition-all">
+                <label class="block text-sm font-semibold text-slate-600 mb-2">KATEGORI</label>
+                <select id="input-kategori" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-500 bg-slate-50/50 text-sm font-medium text-slate-700 appearance-none">
                     <option value="Makanan & Minuman">🍔 Makanan & Minuman</option>
                     <option value="Cicilan">🏠 Pembayaran Cicilan</option>
                     <option value="Tabungan">🐷 Alokasi Tabungan</option>
@@ -334,21 +334,45 @@
         };
     }
 
-    // const selectTipe = document.getElementById("input-tipe");
+        // Ambil element dropdown Tipe dan Kategori
+    const selectTipe = document.getElementById("input-tipe");
     const selectKategori = document.getElementById("input-kategori");
-
-    // Fungsi untuk mengganti kategori secara otomatis
-    function handleKategoriAutoChange() {
-        const tipe = selectTipe.value;
-        if (tipe === "Pemasukan") {
-            selectKategori.value = "Lainnya"; // Ganti ke Lainnya (pemasukan)
-        } else if (tipe === "Belanja / Pengeluaran") {
-            selectKategori.value = "Lain-lain"; // Ganti ke Lain-lain (belanja)
+    
+    // 1. Definisikan daftar pilihan kategori untuk Pengeluaran
+    const opsiPengeluaran = `
+        <option value="Makanan & Minuman">🍔 Makanan & Minuman</option>
+        <option value="Belanja / Pengeluaran">🛍️ Belanja Harian</option>
+        <option value="Cicilan">💳 Cicilan</option>
+        <option value="Tabungan">🏦 Tabungan</option>
+        <option value="Lain-lain">🌀 Lain-lain</option>
+    `;
+    
+    // 2. Definisikan daftar pilihan kategori untuk Pemasukan
+    const opsiPemasukan = `
+        <option value="Gaji (Pemicu Reset)">💰 Gaji (Pemicu Reset)</option>
+        <option value="THR / Bonus">🎁 THR / Bonus</option>
+        <option value="Lainnya">✨ Lainnya</option>
+    `;
+    
+    // Fungsi utama untuk merombak isi dropdown kategori sesuai Jenis Transaksi
+    function sesuaikanPilihanKategori() {
+        const tipeAktif = selectTipe.value;
+        
+        if (tipeAktif === "Pemasukan") {
+            selectKategori.innerHTML = opsiPemasukan;
+        } else {
+            selectKategori.innerHTML = opsiPengeluaran;
         }
     }
-
-    // Daftarkan event listener
-    selectTipe.addEventListener("change", handleKategoriAutoChange);
+    
+    // Jalankan fungsi setiap kali user mengubah isi "Jenis Transaksi"
+    selectTipe.addEventListener("change", sesuaikanPilihanKategori);
+    
+    // Pastikan fungsi juga berjalan saat halaman pertama kali dibuka (mengikuti default value form)
+    document.addEventListener("DOMContentLoaded", () => {
+        // Jalankan fungsi inisialisasi bawaan halaman Anda yang lain di sini jika ada
+        sesuaikanPilihanKategori();
+    });
 </script>
 </body>
 </html>
