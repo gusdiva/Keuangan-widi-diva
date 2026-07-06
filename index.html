@@ -15,9 +15,11 @@
 </head>
 <body class="p-4 max-w-md mx-auto">
 
-    <div class="text-center my-6 flex flex-col items-center justify-center gap-2">
-        <img src="logo1.png" alt="Logo Aplikasi" class="w-16 h-16 rounded-full shadow-md object-cover">
+    <!-- BAGIAN BANNER BARU (Menggantikan Logo Lama) -->
+    <div class="w-full mb-6 mt-2">
+        <img src="banner.png" alt="Banner Aplikasi" class="w-full h-36 object-cover rounded-3xl shadow-xs">
     </div>
+
     <div class="bg-white rounded-3xl p-5 shadow-sm mb-6 border border-slate-100">
         <div class="flex justify-between items-center mb-4">
             <div class="flex items-center gap-2">
@@ -127,23 +129,17 @@
     </div>
 
     <script>
-        // ⚠️ PENTING: TEMPELKAN URL WEB APP GOOGLE APPS SCRIPT (/exec) ANDA DI SINI!
         const API_URL = "https://script.google.com/macros/s/AKfycbwAWStFkvXPcMsrj_0K8W5W3QlqXl9yX5TrK1ePh-ttziMTuylIg8ZTgjE_N8uVF6AK1w/exec";
 
-        // Variabel global penyimpan data agar switch tab instan tanpa loading ulang
         let dataGlobalFinansial = null;
         let tabAktifSaatIni = "DIVA";
 
-        // Atur tanggal default input form ke tanggal hari ini saat halaman dimuat
         document.addEventListener("DOMContentLoaded", () => {
             const hariIni = new Date().toISOString().split('T')[0];
             document.getElementById("input-tanggal").value = hariIni;
             ambilDataSistemDashboard();
         });
 
-        /**
-         * Mengambil data terupdate dari Google Sheet lewat API
-         */
         function ambilDataSistemDashboard() {
             const statusWaktu = document.getElementById("waktu-update");
             const panelError = document.getElementById("error-dashboard");
@@ -175,9 +171,6 @@
             });
         }
 
-        /**
-         * Merender ulang tabel html berdasarkan tab nama yang dipilih
-         */
         function renderTabelDashboard(nama) {
             if (!dataGlobalFinansial) return;
             
@@ -187,7 +180,6 @@
             
             let htmlElemen = "";
             
-            // Loop data baris 1 sampai 4 (Pemasukan, Belanja, Cicilan, Tabungan)
             for (let r = 1; r <= 4; r++) {
                 if (!barisData[r]) continue;
                 htmlElemen += `<tr class="border-b border-slate-50">
@@ -198,7 +190,6 @@
                 </tr>`;
             }
             
-            // Tambahkan baris ke-5 sebagai Sisa Saldo dengan highlight khusus
             if (barisData[5]) {
                 htmlElemen += `<tr class="bg-emerald-50/60 font-bold text-emerald-700">
                     <td class="p-2.5 rounded-l-xl">${barisData[5][0]}</td>
@@ -211,9 +202,6 @@
             containerTabel.innerHTML = htmlElemen;
         }
 
-        /**
-         * Mengontrol perpindahan Tab tombol DIVA / WIDI
-         */
         function switchTab(nama) {
             tabAktifSaatIni = nama;
             document.getElementById("badge-nama").innerText = nama;
@@ -232,9 +220,6 @@
             renderTabelDashboard(nama);
         }
 
-        /**
-         * Mengirimkan Form Inputan Data Transaksi Baru ke Google Sheet
-         */
         function handleSimpanTransaksi(event) {
             event.preventDefault();
             
@@ -261,12 +246,9 @@
             .then(res => {
                 alert(res.pesan);
                 if (res.sukses) {
-                    // Reset inputan teks form kecuali tanggal & nama seleksi
                     document.getElementById("input-keterangan").value = "";
                     document.getElementById("input-jumlah").value = "";
                     document.getElementById("input-file-ocr").value = "";
-                    
-                    // Tarik data dashboard paling baru agar angka tabel langsung update otomatis
                     ambilDataSistemDashboard();
                 }
                 btnSubmit.innerText = "Simpan Transaksi";
@@ -279,9 +261,6 @@
             });
         }
 
-        /**
-         * Menangani Upload Gambar & Proses OCR Teks Struk Belanja
-         */
         function handleOcrScan(input) {
             const file = input.files[0];
             if (!file) return;
@@ -312,7 +291,6 @@
                         divStatus.className = "mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5";
                         divStatus.innerText = "✅ Berhasil mendeteksi nominal angka!";
                         
-                        // Masukkan nominal hasil deteksi otomatis ke kotak jumlah uang
                         if (res.jumlah > 0) {
                             document.getElementById("input-jumlah").value = res.jumlah;
                         } else {
