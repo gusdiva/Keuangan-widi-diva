@@ -58,18 +58,18 @@
             <table class="w-full text-left text-sm border-collapse">
                 <thead>
                     <tr class="border-b border-slate-100 text-slate-400 text-xs uppercase font-semibold">
-                        <th id="label-tabel-nama" class="pb-2">DIVA</th>
-                        <th class="pb-2 text-right">Bulanan</th>
-                        <th class="pb-2 text-right">Mingguan</th>
-                        <th class="pb-2 text-right">Harian</th>
+                        <th id="label-tabel-nama" class="pb-2 whitespace-nowrap">DIVA</th>
+                        <th class="pb-2 text-right whitespace-nowrap">Bulanan</th>
+                        <th class="pb-2 text-right whitespace-nowrap">Mingguan</th>
+                        <th class="pb-2 text-right whitespace-nowrap">Harian</th>
                     </tr>
                 </thead>
                 <tbody id="body-tabel-dashboard" class="text-slate-600 font-medium">
-                    <tr class="border-b border-slate-50"><td class="py-2.5 text-slate-400">Pemasukan (+)</td><td class="text-right py-2.5">Rp0</td><td class="text-right py-2.5">Rp0</td><td class="text-right py-2.5">Rp0</td></tr>
-                    <tr class="border-b border-slate-50"><td class="py-2.5 text-slate-400">Belanja Harian (-)</td><td class="text-right py-2.5">Rp0</td><td class="text-right py-2.5">Rp0</td><td class="text-right py-2.5">Rp0</td></tr>
-                    <tr class="border-b border-slate-50"><td class="py-2.5 text-slate-400">Cicilan (-)</td><td class="text-right py-2.5">Rp0</td><td class="text-right py-2.5">Rp0</td><td class="text-right py-2.5">Rp0</td></tr>
-                    <tr class="border-b border-slate-100"><td class="py-2.5 text-slate-400">Tabungan (-)</td><td class="text-right py-2.5">Rp0</td><td class="text-right py-2.5">Rp0</td><td class="text-right py-2.5">Rp0</td></tr>
-                    <tr class="bg-emerald-50/60 font-bold text-emerald-700"><td class="p-2.5 rounded-l-xl">SISA SALDO</td><td class="text-right p-2.5">Rp0</td><td class="text-right p-2.5">Rp0</td><td class="text-right p-2.5 rounded-r-xl">Rp0</td></tr>
+                    <tr class="border-b border-slate-50 align-middle"><td class="py-2.5 text-slate-400 whitespace-nowrap">Pemasukan (+)</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td></tr>
+                    <tr class="border-b border-slate-50 align-middle"><td class="py-2.5 text-slate-400 whitespace-nowrap">Belanja Harian (-)</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td></tr>
+                    <tr class="border-b border-slate-50 align-middle"><td class="py-2.5 text-slate-400 whitespace-nowrap">Cicilan (-)</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td></tr>
+                    <tr class="border-b border-slate-100 align-middle"><td class="py-2.5 text-slate-400 whitespace-nowrap">Tabungan (-)</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td><td class="text-right py-2.5 whitespace-nowrap">Rp0</td></tr>
+                    <tr class="bg-emerald-50/60 font-bold text-emerald-700 align-middle"><td class="p-2.5 rounded-l-xl whitespace-nowrap">SISA SALDO</td><td class="text-right p-2.5 whitespace-nowrap">Rp0</td><td class="text-right p-2.5 whitespace-nowrap">Rp0</td><td class="text-right p-2.5 rounded-r-xl whitespace-nowrap">Rp0</td></tr>
                 </tbody>
             </table>
         </div>
@@ -118,7 +118,7 @@
             <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1.5 tracking-wide">Kategori</label>
                 <select id="input-kategori" class="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-500 bg-slate-50/50 text-sm font-medium text-slate-700 appearance-none">
-                    <!-- Opsi akan terisi otomatis secara dinamis oleh JavaScript -->
+                    <!-- Opsi terisi otomatis secara dinamis oleh JavaScript -->
                 </select>
             </div>
 
@@ -152,10 +152,10 @@
             <table class="w-full text-left text-xs border-collapse">
                 <thead class="sticky top-0 bg-slate-50 text-slate-400 uppercase font-semibold">
                     <tr>
-                        <th class="p-2">Tgl</th>
-                        <th class="p-2">Ket</th>
-                        <th class="p-2 text-right">Jumlah</th>
-                        <th class="p-2 text-center">Aksi</th>
+                        <th class="p-2 whitespace-nowrap">Tgl</th>
+                        <th class="p-2 whitespace-nowrap">Ket</th>
+                        <th class="p-2 text-right whitespace-nowrap">Jumlah</th>
+                        <th class="p-2 text-center whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="body-tabel-riwayat" class="divide-y divide-slate-100 text-slate-600">
@@ -260,20 +260,20 @@
         
         for (let r = 1; r <= 4; r++) {
             if (!barisData[r]) continue;
-            htmlElemen += `<tr class="border-b border-slate-50">
-                <td class="py-2.5 text-slate-400">${barisData[r][0]}</td>
-                <td class="text-right py-2.5">${barisData[r][1] || 'Rp0'}</td>
-                <td class="text-right py-2.5">${barisData[r][2] || 'Rp0'}</td>
-                <td class="text-right py-2.5">${barisData[r][3] || 'Rp0'}</td>
+            htmlElemen += `<tr class="border-b border-slate-50 align-middle">
+                <td class="py-2.5 text-slate-400 whitespace-nowrap">${barisData[r][0]}</td>
+                <td class="text-right py-2.5 whitespace-nowrap">${barisData[r][1] || 'Rp0'}</td>
+                <td class="text-right py-2.5 whitespace-nowrap">${barisData[r][2] || 'Rp0'}</td>
+                <td class="text-right py-2.5 whitespace-nowrap">${barisData[r][3] || 'Rp0'}</td>
             </tr>`;
         }
         
         if (barisData[5]) {
-            htmlElemen += `<tr class="bg-emerald-50/60 font-bold text-emerald-700">
-                <td class="p-2.5 rounded-l-xl">${barisData[5][0]}</td>
-                <td class="text-right p-2.5">${barisData[5][1] || 'Rp0'}</td>
-                <td class="text-right p-2.5">${barisData[5][2] || 'Rp0'}</td>
-                <td class="text-right p-2.5 rounded-r-xl">${barisData[5][3] || 'Rp0'}</td>
+            htmlElemen += `<tr class="bg-emerald-50/60 font-bold text-emerald-700 align-middle">
+                <td class="p-2.5 rounded-l-xl whitespace-nowrap">${barisData[5][0]}</td>
+                <td class="text-right p-2.5 whitespace-nowrap">${barisData[5][1] || 'Rp0'}</td>
+                <td class="text-right p-2.5 whitespace-nowrap">${barisData[5][2] || 'Rp0'}</td>
+                <td class="text-right p-2.5 rounded-r-xl whitespace-nowrap">${barisData[5][3] || 'Rp0'}</td>
             </tr>`;
         }
         
@@ -314,7 +314,7 @@
             // Menggunakan ID unik transaksi atau nomor baris sheet (rowIndex / id)
             const idTransaksi = t.id || t.rowIndex || t.row;
 
-            html += `<tr>
+            html += `<tr class="align-middle">
                 <td class="p-2 whitespace-nowrap text-slate-400">${t.tanggal || '-'}</td>
                 <td class="p-2">
                     <div class="font-medium text-slate-700">${t.keterangan || '-'}</div>
@@ -525,10 +525,10 @@
             <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 24px;">
                 <thead>
                     <tr style="background-color: #f8fafc; text-align: left; border-bottom: 2px solid #e2e8f0; color: #475569;">
-                        <th style="padding: 8px;">Kategori</th>
-                        <th style="padding: 8px; text-align: right;">Bulanan</th>
-                        <th style="padding: 8px; text-align: right;">Mingguan</th>
-                        <th style="padding: 8px; text-align: right;">Harian</th>
+                        <th style="padding: 8px; white-space: nowrap;">Kategori</th>
+                        <th style="padding: 8px; text-align: right; white-space: nowrap;">Bulanan</th>
+                        <th style="padding: 8px; text-align: right; white-space: nowrap;">Mingguan</th>
+                        <th style="padding: 8px; text-align: right; white-space: nowrap;">Harian</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -536,19 +536,19 @@
                         if (!barisData || !barisData[r]) return '';
                         return `
                             <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 8px; font-weight: 600; color: #475569;">${barisData[r][0]}</td>
-                                <td style="padding: 8px; text-align: right;">${barisData[r][1] || 'Rp0'}</td>
-                                <td style="padding: 8px; text-align: right;">${barisData[r][2] || 'Rp0'}</td>
-                                <td style="padding: 8px; text-align: right;">${barisData[r][3] || 'Rp0'}</td>
+                                <td style="padding: 8px; font-weight: 600; color: #475569; white-space: nowrap;">${barisData[r][0]}</td>
+                                <td style="padding: 8px; text-align: right; white-space: nowrap;">${barisData[r][1] || 'Rp0'}</td>
+                                <td style="padding: 8px; text-align: right; white-space: nowrap;">${barisData[r][2] || 'Rp0'}</td>
+                                <td style="padding: 8px; text-align: right; white-space: nowrap;">${barisData[r][3] || 'Rp0'}</td>
                             </tr>
                         `;
                     }).join('')}
                     ${barisData && barisData[5] ? `
                         <tr style="background-color: #ecfdf5; font-weight: bold; color: #047857; border-top: 2px solid #a7f3d0;">
-                            <td style="padding: 10px;">${barisData[5][0]}</td>
-                            <td style="padding: 10px; text-align: right;">${barisData[5][1] || 'Rp0'}</td>
-                            <td style="padding: 10px; text-align: right;">${barisData[5][2] || 'Rp0'}</td>
-                            <td style="padding: 10px; text-align: right;">${barisData[5][3] || 'Rp0'}</td>
+                            <td style="padding: 10px; white-space: nowrap;">${barisData[5][0]}</td>
+                            <td style="padding: 10px; text-align: right; white-space: nowrap;">${barisData[5][1] || 'Rp0'}</td>
+                            <td style="padding: 10px; text-align: right; white-space: nowrap;">${barisData[5][2] || 'Rp0'}</td>
+                            <td style="padding: 10px; text-align: right; white-space: nowrap;">${barisData[5][3] || 'Rp0'}</td>
                         </tr>
                     ` : ''}
                 </tbody>
@@ -558,17 +558,17 @@
             <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
                 <thead>
                     <tr style="background-color: #f8fafc; text-align: left; border-bottom: 2px solid #e2e8f0; color: #475569;">
-                        <th style="padding: 8px;">Tanggal</th>
+                        <th style="padding: 8px; white-space: nowrap;">Tanggal</th>
                         <th style="padding: 8px;">Kategori</th>
                         <th style="padding: 8px;">Keterangan</th>
-                        <th style="padding: 8px; text-align: right;">Jumlah (Rp)</th>
+                        <th style="padding: 8px; text-align: right; white-space: nowrap;">Jumlah (Rp)</th>
                     </tr>
                 </thead>
                 <tbody>
         `;
 
         if (listTx.length === 0) {
-            htmlContent += `<tr><td colspan="4" style="padding: 12px; text-align: center; color: #94a3b8; italic;">Belum ada riwayat transaksi tercatat.</td></tr>`;
+            htmlContent += `<tr><td colspan="4" style="padding: 12px; text-align: center; color: #94a3b8; font-style: italic;">Belum ada riwayat transaksi tercatat.</td></tr>`;
         } else {
             listTx.forEach(t => {
                 const isPemasukan = t.tipe && t.tipe.toLowerCase().indexOf("pemasukan") !== -1;
@@ -577,10 +577,10 @@
 
                 htmlContent += `
                     <tr style="border-bottom: 1px solid #f1f5f9;">
-                        <td style="padding: 6px 8px; color: #64748b;">${t.tanggal || '-'}</td>
+                        <td style="padding: 6px 8px; color: #64748b; white-space: nowrap;">${t.tanggal || '-'}</td>
                         <td style="padding: 6px 8px;">${t.kategori || '-'}</td>
                         <td style="padding: 6px 8px;">${t.keterangan || '-'}</td>
-                        <td style="padding: 6px 8px; text-align: right; ${warnaStyle}">${isPemasukan ? '+' : ''}Rp${nominalFmt}</td>
+                        <td style="padding: 6px 8px; text-align: right; white-space: nowrap; ${warnaStyle}">${isPemasukan ? '+' : ''}Rp${nominalFmt}</td>
                     </tr>
                 `;
             });
