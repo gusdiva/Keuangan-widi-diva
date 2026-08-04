@@ -155,11 +155,12 @@
                         <th class="p-2">Tgl</th>
                         <th class="p-2">Ket</th>
                         <th class="p-2 text-right">Jumlah</th>
+                        <th class="p-2 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="body-tabel-riwayat" class="divide-y divide-slate-100 text-slate-600">
                     <tr>
-                        <td colspan="3" class="p-4 text-center text-slate-400 italic">Memuat riwayat...</td>
+                        <td colspan="4" class="p-4 text-center text-slate-400 italic">Memuat riwayat...</td>
                     </tr>
                 </tbody>
             </table>
@@ -287,7 +288,7 @@
         const labelCount = document.getElementById("count-transaksi");
 
         if (!dataGlobalFinansial || !dataGlobalFinansial.transactions) {
-            container.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-400">Tidak ada data transaksi.</td></tr>`;
+            container.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Tidak ada data transaksi.</td></tr>`;
             labelCount.innerText = "0 data";
             return;
         }
@@ -297,7 +298,7 @@
         labelCount.innerText = `${filtered.length} data`;
 
         if (filtered.length === 0) {
-            container.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-400 italic">Belum ada riwayat transaksi untuk ${nama}.</td></tr>`;
+            container.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 italic">Belum ada riwayat transaksi untuk ${nama}.</td></tr>`;
             return;
         }
 
@@ -309,6 +310,9 @@
             const isPemasukan = t.tipe && t.tipe.toLowerCase().indexOf("pemasukan") !== -1;
             const warnaNominal = isPemasukan ? "text-emerald-600 font-bold" : "text-slate-700 font-semibold";
             const formattedNominal = "Rp" + Number(t.jumlah || 0).toLocaleString("id-ID");
+            
+            // Menggunakan ID unik transaksi atau nomor baris sheet (rowIndex / id)
+            const idTransaksi = t.id || t.rowIndex || t.row;
 
             html += `<tr>
                 <td class="p-2 whitespace-nowrap text-slate-400">${t.tanggal || '-'}</td>
@@ -317,10 +321,56 @@
                     <div class="text-[10px] text-slate-400">${t.kategori || ''}</div>
                 </td>
                 <td class="p-2 text-right ${warnaNominal} whitespace-nowrap">${isPemasukan ? '+' : ''}${formattedNominal}</td>
+                <td class="p-2 text-center">
+                    <button onclick="handleHapusTransaksi('${idTransaksi}', '${t.keterangan || 'transaksi ini'}')" class="p-1.5 text-rose-500 hover:bg-rose-50 hover:text-rose-700 rounded-lg transition-all cursor-pointer" title="Hapus Transaksi">
+                        🗑️
+                    </button>
+                </td>
             </tr>`;
         });
 
         container.innerHTML = html;
+    }
+
+    /**
+     * Menghapus Transaksi dari Google Sheet
+     */
+    function handleHapusTransaksi(id, deskripsi) {
+        if (!id || id === 'undefined') {
+            alert("ID atau nomor baris transaksi tidak ditemukan. Pastikan data transaksi dari server memiliki ID/rowIndex.");
+            return;
+        }
+
+        if (!confirm(`Apakah Anda yakin ingin menghapus "${deskripsi}"?`)) {
+            return;
+        }
+
+        const statusWaktu = document.getElementById("waktu-update");
+        statusWaktu.innerText = "Menghapus data dari Google Sheet...";
+
+        fetch(API_URL, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+                action: "hapusTransaksi",
+                id: id
+            })
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.sukses) {
+                alert(res.pesan || "Transaksi berhasil dihapus!");
+                ambilDataSistemDashboard();
+            } else {
+                alert("Gagal menghapus data: " + (res.error || res.pesan));
+                statusWaktu.innerText = "Gagal menghapus data.";
+            }
+        })
+        .catch(err => {
+            alert("Gagal terhubung ke server backend: " + err.toString());
+            statusWaktu.innerText = "Koneksi terputus.";
+        });
     }
 
     /**
